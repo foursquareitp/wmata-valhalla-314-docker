@@ -1,0 +1,33 @@
+version: '3.0'
+services:
+  valhalla:
+    image: ghcr.io/gis-ops/docker-valhalla/valhalla:3.1.4 
+    ports:
+      - "8002:8002"
+    volumes:
+      # '309' is misnomer from last version, needs to be renamed for clarity
+      - ./custom_files_wmata/:/custom_files
+    environment:
+      # The tile_file must be located in the `custom_files` folder.
+      # The tile_file has priority and is used when valid.
+      # If the tile_file doesn't exist, the url is used instead.
+      # Don't blank out tile_url when you use tile_file and vice versa.
+      # tile_urls for dc provided but will use one for dc region
+      - tile_urls=https://download.geofabrik.de/north-america/us-south-latest.osm.pbf
+      # Get correct bounding box from e.g. https://boundingbox.klokantech.com/
+      # These are based on the outer bounding box of WMATA's buzzones, extended a bit further west 
+      # as insurnace on the silver line extension (though this is for bus routing, but anyway)
+      - min_x=-77.57000 # -180 -> World
+      - min_y=38.57621 #  -90  -> World
+      - max_x=-76.61750 #  180 -> World
+      - max_y=39.23154  #  90  -> World
+      # this should be set to True when automated/deployed
+      - use_tiles_ignore_pbf=False
+      # this should be set to True when automated/deployed
+      - force_rebuild=False
+      # we don't have elevation files in any case
+      - force_rebuild_elevation=False
+      - build_elevation=False
+      - build_admins=False
+      - build_time_zones=False
+
