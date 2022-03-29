@@ -5,7 +5,6 @@ services:
     ports:
       - "8002:8002"
     volumes:
-      # '309' is misnomer from last version, needs to be renamed for clarity
       - ./custom_files_wmata/:/custom_files
     environment:
       # The tile_file must be located in the `custom_files` folder.
